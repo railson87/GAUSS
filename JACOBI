@@ -1,0 +1,46 @@
+import numpy as np
+AB = np.array([[4., 3., 2., 960.], [1., 3., 1., 510.], [2., 1., 3., 610.]])
+ER = 1/1000
+X0 = np.array([[0.], [0.], [0.]])
+
+# Gauss-Jacobi
+A = AB[:,0:-1]
+B = AB[:,-1]
+X = np.copy(X0)
+erro = 1
+k1 = 0
+    
+while (erro > ER):
+    Xp = np.copy(X)
+    for i in range(len(A)):
+        s = 0
+        for j in range(len(A)):
+            if (i != j):
+                s += A[i,j]*Xp[j]
+        X[i] = (B[i] - s)/A[i,i]
+    EA = np.absolute(X - Xp)
+    Emax = np.amax(EA)
+    idx = np.where(EA == Emax)
+    erro = np.absolute(EA[idx[0]]/X[idx[0]])
+    k1 += 1
+  
+while (erro > ER):
+    Xp = np.copy(X)
+    for i in range(len(A)):
+        s = 0
+        for j in range(len(A)):
+            if (i != j):
+                s += A[i,j]*X[j]
+        X[i] = (B[i] - s)/A[i,i]
+    EA = np.absolute(X - Xp)
+    Emax = np.amax(EA)
+    idx = np.where(EA == Emax)
+    erro = np.absolute(EA[idx[0]]/X[idx[0]])
+    k2 += 1
+  
+X = np.around(X, decimals=3)    
+    
+print("A solução de X é:\n", X)
+
+print("O número de iterações pelo método de Gauss-Jacobi foi:", k1)
+    
